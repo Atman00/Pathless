@@ -1,5 +1,6 @@
 // prisma/seed.ts
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -14,11 +15,15 @@ async function main() {
 
   console.log('Seeding relational entities (3NF)...');
 
-  // 1. Seed Users
+  // Generate hash enkripsi untuk password default ("password123")
+  const hashedPassword = await bcrypt.hash('password123', 10);
+
+  // 1. Seed Users (Kini menyertakan field password wajib)
   const user1 = await prisma.user.create({
     data: {
       name: 'Rafli',
       email: 'rafli@pathless.local',
+      password: hashedPassword,
     },
   });
 
@@ -40,8 +45,8 @@ async function main() {
   // 4. Seed User Interactions (Simulasi preferensi user untuk produk Outerwear mahal)
   await prisma.userInteraction.createMany({
     data: [
-      { user_id: user1.id, product_id: p2.id, interaction_type: 'view' }, // View CONCRETE HOODIE (550k)
-      { user_id: user1.id, product_id: p4.id, interaction_type: 'like' }, // Like STEEL BOMBER (650k)
+      { user_id: user1.id, product_id: p2.id, interaction_type: 'view' },
+      { user_id: user1.id, product_id: p4.id, interaction_type: 'like' },
     ],
   });
 
