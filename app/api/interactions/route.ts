@@ -2,6 +2,8 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
+export const dynamic = "force-dynamic";
+
 const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
@@ -9,7 +11,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { userId, productId, type } = body;
 
-    // Validasi data masuk
     if (!userId || !productId || !type) {
       return NextResponse.json(
         { error: 'Missing required parameters: userId, productId, or type.' }, 
@@ -17,7 +18,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Catat interaksi ke database
     const interaction = await prisma.userInteraction.create({
       data: {
         user_id: Number(userId),

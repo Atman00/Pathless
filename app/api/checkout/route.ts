@@ -2,6 +2,8 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
+export const dynamic = "force-dynamic";
+
 const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
@@ -13,7 +15,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid payload. User ID and items are required.' }, { status: 400 });
     }
 
-    // Kalkulasi total harga di backend (mencegah manipulasi harga dari sisi client)
     let totalAmount = 0;
     const transactionItemsData = [];
 
@@ -25,11 +26,10 @@ export async function POST(request: Request) {
       transactionItemsData.push({
         product_id: product.id,
         quantity: item.quantity,
-        price_at_time: product.price // Syarat ketat 3NF: simpan harga historis
+        price_at_time: product.price 
       });
     }
 
-    // Tulis ke database menggunakan Prisma Interactive Transaction
     const transaction = await prisma.transaction.create({
       data: {
         user_id: Number(userId),
