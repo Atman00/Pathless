@@ -2,6 +2,9 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
+// PAKSA MODE DINAMIS AGAR DATABASE TIDAK DIKUERI SAAT PROSES BUILD
+export const dynamic = "force-dynamic";
+
 const prisma = new PrismaClient();
 
 export async function GET() {
