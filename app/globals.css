@@ -1,0 +1,39 @@
+/* app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-black antialiased overflow-x-hidden;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+
+  /* Brutalist Selection Color */
+  ::selection {
+    @apply bg-black text-white;
+  }
+
+  /* Force raw, sharp focus borders across all interactive items */
+  input:focus, select:focus, textarea:focus, button:focus {
+    @apply outline-none ring-4 ring-black ring-offset-0;
+  }
+
+  /* Removing smooth behaviors for a non-conformist, instant feel */
+  html {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom Utilities for Brutalist Grid & Borders */
+@layer utilities {
+  .brutal-border {
+    border: 4px solid #000000;
+  }
+  .brutal-shadow {
+    box-shadow: 8px 8px 0px 0px #000000;
+  }
+  .brutal-shadow-sm {
+    box-shadow: 4px 4px 0px 0px #000000;
+  }
+}

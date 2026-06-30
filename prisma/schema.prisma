@@ -1,0 +1,76 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" 
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  name             String
+  email            String            @unique
+  password         String            // Menampung hash bcrypt
+  created_at       DateTime          @default(now())
+  
+  transactions     Transaction[]
+  interactions     UserInteraction[]
+
+  @@map("users")
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  products    Product[]
+  @@map("categories")
+}
+
+model Product {
+  id               Int               @id @default(autoincrement())
+  name             String
+  category_id      Int
+  price            Float
+  
+  category         Category          @relation(fields: [category_id], references: [id])
+  transactionItems TransactionItem[]
+  interactions     UserInteraction[]
+  @@map("products")
+}
+
+model Transaction {
+  id               Int               @id @default(autoincrement())
+  user_id          Int
+  total_amount     Float
+  transaction_date DateTime          @default(now())
+  
+  user             User              @relation(fields: [user_id], references: [id])
+  items            TransactionItem[]
+  @@map("transactions")
+}
+
+model TransactionItem {
+  id               Int               @id @default(autoincrement())
+  transaction_id   Int
+  product_id       Int
+  quantity         Int
+  price_at_time    Float             
+  
+  transaction      Transaction       @relation(fields: [transaction_id], references: [id])
+  product          Product           @relation(fields: [product_id], references: [id])
+  @@map("transaction_items")
+}
+
+model UserInteraction {
+  id               Int               @id @default(autoincrement())
+  user_id          Int
+  product_id       Int
+  interaction_type String            
+  created_at       DateTime          @default(now())
+  
+  user             User              @relation(fields: [user_id], references: [id])
+  product          Product           @relation(fields: [product_id], references: [id])
+  @@map("user_interactions")
+}
