@@ -34,7 +34,8 @@ model Product {
   name             String
   category_id      Int
   price            Float
-  
+  image_url        String?           // Kolom baru untuk tautan gambar
+
   category         Category          @relation(fields: [category_id], references: [id])
   transactionItems TransactionItem[]
   interactions     UserInteraction[]

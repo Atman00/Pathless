@@ -6,18 +6,12 @@ export const dynamic = "force-dynamic";
 
 const prisma = new PrismaClient();
 
-// READ: Ambil semua produk untuk katalog dan CMS
 export async function GET() {
   try {
     const products = await prisma.product.findMany({
-      include: { 
-        category: true 
-      },
-      orderBy: {
-        id: 'asc'
-      }
+      include: { category: true },
+      orderBy: { id: 'asc' }
     });
-    
     return NextResponse.json(products);
   } catch (error) {
     console.error("System Error (Products GET API):", error);
@@ -27,25 +21,23 @@ export async function GET() {
   }
 }
 
-// CREATE: Tambah produk baru via CMS Admin
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, price, category_id } = body;
+    const { name, price, category_id, image_url } = body;
 
     if (!name || !price || !category_id) {
-      return NextResponse.json({ error: 'INCOMPLETE_PAYLOAD // NAME, PRICE, AND CATEGORY_ID REQUIRED' }, { status: 400 });
+      return NextResponse.json({ error: 'INCOMPLETE_PAYLOAD' }, { status: 400 });
     }
 
     const newProduct = await prisma.product.create({
       data: {
-        name: name.toUpperCase(), // Sinkronisasi gaya huruf kapital Pathless
+        name: name.toUpperCase(),
         price: Number(price),
-        category_id: Number(category_id)
+        category_id: Number(category_id),
+        image_url: image_url || null, // Simpan URL gambar
       },
-      include: {
-        category: true
-      }
+      include: { category: true }
     });
 
     return NextResponse.json({ success: true, data: newProduct });

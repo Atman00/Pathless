@@ -225,9 +225,13 @@ export default function PathlessHomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {products.map((product) => (
               <div key={`prod-${product.id}`} className="border-4 border-black flex flex-col bg-white hover:bg-black hover:text-white transition-colors duration-0 brutal-shadow-sm group cursor-pointer" onClick={() => handleRecordInteraction(product, 'view')}>
-                <div className="aspect-square border-b-4 border-black bg-gray-100 flex items-center justify-center p-4 relative group-hover:bg-gray-900 transition-colors duration-0">
-                  <span className="text-gray-500 font-mono text-sm tracking-widest opacity-60 group-hover:text-white transition-opacity">[ SYS_PRD_{product.id} ]</span>
-                </div>
+                <div className="aspect-square border-b-4 border-black bg-gray-100 flex items-center justify-center relative overflow-hidden group-hover:bg-gray-900 transition-colors duration-0">
+                    {product.image_url ? (
+                      <img src={product.image_url} alt={product.name} className="w-full h-full object-cover mix-blend-multiply group-hover:mix-blend-normal transition-all duration-0" />
+                    ) : (
+                      <span className="text-gray-500 font-mono text-sm tracking-widest opacity-60 group-hover:text-white transition-opacity">[ SYS_PRD_{product.id} ]</span>
+                    )}
+                  </div>
                 <div className="p-4 flex-grow flex flex-col justify-between pointer-events-none">
                   <div>
                     <p className="text-xs font-mono font-bold text-gray-500 group-hover:text-gray-200 mb-1">LOC // {product.category?.name || categoryMap[product.category_id]}</p>
